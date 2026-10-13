@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Computer Networks Lab - Macro Sheet</title>
+  <style>
+    body {
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+      line-height: 1.5;
+      color: #222;
+      background-color: #f8f9fa;
+      margin: 0;
+      padding: 24px;
+    }
+    .container {
+      max-width: 900px;
+      margin: 0 auto;
+      background: #fff;
+      padding: 32px;
+      border-radius: 8px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.08);
+    }
+    h1 {
+      border-bottom: 2px solid #0056b3;
+      padding-bottom: 8px;
+      color: #0056b3;
+      margin-top: 0;
+    }
+    h2 {
+      color: #1a1a1a;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 6px;
+      margin-top: 28px;
+    }
+    h3 {
+      color: #333;
+      margin-bottom: 6px;
+    }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin: 12px 0 20px 0;
+      font-size: 14px;
+    }
+    th, td {
+      border: 1px solid #ccc;
+      padding: 8px 12px;
+      text-align: left;
+    }
+    th {
+      background-color: #f1f3f5;
+    }
+    pre {
+      background-color: #272822;
+      color: #f8f8f2;
+      padding: 14px;
+      border-radius: 6px;
+      overflow-x: auto;
+      font-size: 13px;
+      font-family: Consolas, Monaco, "Courier New", monospace;
+    }
+    code {
+      font-family: Consolas, Monaco, "Courier New", monospace;
+      background: #e9ecef;
+      padding: 2px 5px;
+      border-radius: 4px;
+      font-size: 13px;
+    }
+    pre code {
+      background: transparent;
+      padding: 0;
+      color: inherit;
+    }
+    .cmd {
+      background: #eef2f7;
+      border-left: 4px solid #0056b3;
+      padding: 8px 12px;
+      font-family: monospace;
+      margin: 8px 0;
+    }
+    ul, ol {
+      margin-top: 4px;
+      padding-left: 20px;
+    }
+    li {
+      margin-bottom: 4px;
+    }
+  </style>
+</head>
+<body>
+
+<div class="container">
+  <h1>Computer Networks Lab – Complete Macro Sheet</h1>
+
+  <!-- PRACTICAL 1 -->
+  <h2>Practical 1: Two Subnets Network Design Using NetSim</h2>
+  <p><strong>Aim:</strong> To design and simulate a network scenario consisting of two subnets connected via a router in NetSim, and to study the traffic flow from Node 4 (Subnet 1) to Node 3 (Subnet 2).</p>
+  
+  <h3>1. Topology & IP Configuration</h3>
+  <ul>
+    <li><strong>Subnet 1 (192.168.1.0/24):</strong> 6 Wired Nodes (N1–N6: <code>192.168.1.2</code> to <code>192.168.1.7</code>) connected via Switch 1 to Router Interface 1 (<code>192.168.1.1</code>). Gateway: <code>192.168.1.1</code>.</li>
+    <li><strong>Subnet 2 (192.168.2.0/24):</strong> 5 Wired Nodes (N1–N5: <code>192.168.2.2</code> to <code>192.168.2.6</code>) connected via Switch 2 to Router Interface 2 (<code>192.168.2.1</code>). Gateway: <code>192.168.2.1</code>.</li>
+  </ul>
+
+  <h3>2. Procedure</h3>
+  <ol>
+    <li>Open <strong>NetSim &rarr; New Simulation &rarr; Internetworks</strong>.</li>
+    <li>Place 11 Wired Nodes, 2 Switches, and 1 Router. Connect Subnet 1 devices to Switch 1 and Router Interface 1. Connect Subnet 2 devices to Switch 2 and Router Interface 2.</li>
+    <li>Assign IP addresses, subnet masks (<code>255.255.255.0</code>), and default gateways according to the configuration plan.</li>
+    <li>Configure application traffic: <strong>Source:</strong> Node 4 (Subnet 1, <code>192.168.1.5</code>) &rarr; <strong>Destination:</strong> Node 3 (Subnet 2, <code>192.168.2.4</code>). Use CBR/UDP with packet size 512 bytes, inter-arrival time 10,000 &mu;s.</li>
+    <li>Enable Packet Trace, run the simulation, and inspect path metrics.</li>
+  </ol>
+
+  <h3>3. Traffic Flow</h3>
+  <p><code>Node 4 (Subnet 1) &rarr; Switch 1 &rarr; Router (192.168.1.1 &rarr; 192.168.2.1) &rarr; Switch 2 &rarr; Node 3 (Subnet 2)</code></p>
+
+  <h3>4. Observations</h3>
+  <table>
+    <tr><th>Parameter</th><th>Observation</th></tr>
+    <tr><td>Delivery</td><td>Packets successfully reach Node 3 across the boundary.</td></tr>
+    <tr><td>Path Traverse</td><td>Crosses L2 switches and requires L3 routing across interfaces.</td></tr>
+    <tr><td>Delay Profile</td><td>Includes queuing, transmission, propagation, and router processing delays.</td></tr>
+  </table>
+
+  <h3>5. Inference</h3>
+  <p>Devices across different subnets cannot communicate via L2 switching alone and require a default gateway (Router) to route packets across subnet boundaries based on IP destination lookups.</p>
+
+  <hr>
+
+  <!-- PRACTICAL 2 -->
+  <h2>Practical 2: Traffic Generation Rate and Service Rate in NetSim</h2>
+  <p><strong>Aim:</strong> To study the relationship between traffic generation rate and bottleneck link service rate, and analyze their impact on packet drops, delay, and queuing.</p>
+
+  <h3>Formula</h3>
+  <p><code>Generation Rate (Mbps) = (Packet Size in Bytes &times; 8) / Inter-arrival Time (&mu;s)</code></p>
+
+  <h3>Procedure</h3>
+  <ol>
+    <li>Create a source-destination path with a constrained bottleneck link (e.g., 10 Mbps).</li>
+    <li>Vary packet size (e.g., 512B, 1000B, 1500B) and inter-arrival time (e.g., 500 &mu;s to 10,000 &mu;s).</li>
+    <li>Execute runs and record throughput, average delay, queue length, and dropped packets.</li>
+  </ol>
+
+  <h3>Observations & Inference</h3>
+  <ul>
+    <li><strong>Generation Rate &lt; Service Rate:</strong> Queues remain stable and clear quickly; throughput matches generation rate with minimal latency.</li>
+    <li><strong>Generation Rate &asymp; Service Rate:</strong> Buffer queuing rises sharply; queuing delay increases significantly.</li>
+    <li><strong>Generation Rate &gt; Service Rate:</strong> Bottleneck capacity is exceeded; queues overflow causing packet drops and maximum latency.</li>
+  </ul>
+
+  <hr>
+
+  <!-- PRACTICAL 3(A) -->
+  <h2>Practical 3(a): Hostname, IP Address, Class, Network ID & Host ID</h2>
+  <p><strong>Aim:</strong> Write a C++ program to fetch the computer's hostname and IPv4 address, identify its class, and print Network and Host IDs.</p>
+
+  <h3>Code (hostname.cpp)</h3>
+<pre><code>#include &lt;iostream&gt;
+#include &lt;cstdio&gt;
+#include &lt;string&gt;
+#include &lt;winsock2.h&gt;
+
+using namespace std;
+
+int main() {
+    WSADATA wsa;
+    WSAStartup(MAKEWORD(2, 2), &amp;wsa);
+
+    char name[256];
+    gethostname(name, sizeof(name));
+    cout &lt;&lt; "Hostname: " &lt;&lt; name &lt;&lt; endl;
+
+    hostent *h = gethostbyname(name);
+    if (h == NULL || h-&gt;h_addr_list[0] == NULL) {
+        cout &lt;&lt; "IPv4 address not found\n";
+        WSACleanup();
+        return 1;
+    }
+
+    in_addr addr = *(in_addr *)h-&gt;h_addr_list[0];
+    string ip = inet_ntoa(addr);
+    cout &lt;&lt; "IPv4 Address: " &lt;&lt; ip &lt;&lt; endl;
+
+    int a, b, c, d;
+    sscanf(ip.c_str(), "%d.%d.%d.%d", &amp;a, &amp;b, &amp;c, &amp;d);
+
+    if (a &gt;= 1 &amp;&amp; a &lt;= 126) {
+        cout &lt;&lt; "Class: A\nNetwork ID: " &lt;&lt; a &lt;&lt; ".0.0.0\nHost ID: " &lt;&lt; b &lt;&lt; "." &lt;&lt; c &lt;&lt; "." &lt;&lt; d &lt;&lt; endl;
+    } else if (a &gt;= 128 &amp;&amp; a &lt;= 191) {
+        cout &lt;&lt; "Class: B\nNetwork ID: " &lt;&lt; a &lt;&lt; "." &lt;&lt; b &lt;&lt; ".0.0\nHost ID: " &lt;&lt; c &lt;&lt; "." &lt;&lt; d &lt;&lt; endl;
+    } else if (a &gt;= 192 &amp;&amp; a &lt;= 223) {
+        cout &lt;&lt; "Class: C\nNetwork ID: " &lt;&lt; a &lt;&lt; "." &lt;&lt; b &lt;&lt; "." &lt;&lt; c &lt;&lt; ".0\nHost ID: " &lt;&lt; d &lt;&lt; endl;
+    } else if (a &gt;= 224 &amp;&amp; a &lt;= 239) {
+        cout &lt;&lt; "Class: D (Multicast)\nNetwork/Host ID: Not applicable\n";
+    } else if (a &gt;= 240 &amp;&amp; a &lt;= 255) {
+        cout &lt;&lt; "Class: E (Experimental)\nNetwork/Host ID: Not applicable\n";
+    } else {
+        cout &lt;&lt; "Reserved/Loopback address\n";
+    }
+
+    WSACleanup();
+    return 0;
+}</code></pre>
+
+  <p><strong>Compilation & Execution:</strong></p>
+  <div class="cmd">
+    g++ hostname.cpp -o hostname.exe -lws2_32<br>
+    .\hostname.exe
+  </div>
+  <p><strong>Sample Output:</strong></p>
+  <pre>Hostname: DESKTOP-ABC123
+IPv4 Address: 192.168.1.10
+Class: C
+Network ID: 192.168.1.0
+Host ID: 10</pre>
+
+  <hr>
+
+  <!-- PRACTICAL 3(B) -->
+  <h2>Practical 3(b): Dotted Decimal to 32-bit Binary Conversion</h2>
+  <p><strong>Aim:</strong> Convert a dotted decimal IPv4 address into its 32-bit binary representation.</p>
+
+  <h3>Code (ipv4_binary.cpp)</h3>
+<pre><code>#include &lt;iostream&gt;
+#include &lt;cstdio&gt;
+#include &lt;string&gt;
+
+using namespace std;
+
+int main() {
+    string ip;
+    int a[4];
+    cout &lt;&lt; "Enter IPv4 address: ";
+    cin &gt;&gt; ip;
+
+    if (sscanf(ip.c_str(), "%d.%d.%d.%d", &amp;a[0], &amp;a[1], &amp;a[2], &amp;a[3]) != 4) {
+        cout &lt;&lt; "Invalid IP address\n";
+        return 0;
+    }
+
+    for (int i = 0; i &lt; 4; i++) {
+        if (a[i] &lt; 0 || a[i] &gt; 255) {
+            cout &lt;&lt; "Invalid IP address\n";
+            return 0;
+        }
+    }
+
+    cout &lt;&lt; "32-bit binary: ";
+    for (int i = 0; i &lt; 4; i++) {
+        for (int j = 7; j &gt;= 0; j--) {
+            cout &lt;&lt; ((a[i] &gt;&gt; j) &amp; 1);
+        }
+        if (i &lt; 3) cout &lt;&lt; ".";
+    }
+    cout &lt;&lt; endl;
+    return 0;
+}</code></pre>
+
+  <p><strong>Compilation & Execution:</strong></p>
+  <div class="cmd">
+    g++ ipv4_binary.cpp -o ipv4_binary.exe<br>
+    .\ipv4_binary.exe
+  </div>
+  <p><strong>Sample Input / Output:</strong></p>
+  <pre>Enter IPv4 address: 192.168.1.10
+32-bit binary: 11000000.10101000.00000001.00001010</pre>
+
+  <hr>
+
+  <!-- PRACTICAL 4(A) -->
+  <h2>Practical 4(A): Dijkstra's Shortest Path Algorithm</h2>
+  <p><strong>Aim:</strong> Implement Dijkstra's algorithm in C++ to find the shortest distance from a single source vertex to all other vertices in a weighted graph.</p>
+
+  <h3>Code (dijkstra.cpp)</h3>
+<pre><code>#include &lt;iostream&gt;
+
+using namespace std;
+
+int main() {
+    int n, a[10][10], d[10], vis[10] = {};
+    const int INF = 999999;
+
+    cout &lt;&lt; "Enter number of vertices: ";
+    cin &gt;&gt; n;
+
+    cout &lt;&lt; "Enter adjacency matrix:\n";
+    for (int i = 0; i &lt; n; i++)
+        for (int j = 0; j &lt; n; j++)
+            cin &gt;&gt; a[i][j];
+
+    int source;
+    cout &lt;&lt; "Enter source vertex (0 to n-1): ";
+    cin &gt;&gt; source;
+
+    for (int i = 0; i &lt; n; i++) d[i] = INF;
+    d[source] = 0;
+
+    for (int i = 0; i &lt; n; i++) {
+        int u = -1, best = INF;
+        for (int j = 0; j &lt; n; j++) {
+            if (!vis[j] &amp;&amp; d[j] &lt; best) {
+                best = d[j];
+                u = j;
+            }
+        }
+        if (u == -1) break;
+        vis[u] = 1;
+
+        for (int v = 0; v &lt; n; v++) {
+            if (a[u][v] &gt; 0 &amp;&amp; !vis[v] &amp;&amp; d[u] + a[u][v] &lt; d[v]) {
+                d[v] = d[u] + a[u][v];
+            }
+        }
+    }
+
+    cout &lt;&lt; "\nShortest distances:\n";
+    for (int i = 0; i &lt; n; i++) {
+        cout &lt;&lt; "Vertex " &lt;&lt; i &lt;&lt; " : ";
+        if (d[i] == INF) cout &lt;&lt; "Unreachable\n";
+        else cout &lt;&lt; d[i] &lt;&lt; endl;
+    }
+    return 0;
+}</code></pre>
+
+  <p><strong>Compilation & Execution:</strong></p>
+  <div class="cmd">
+    g++ dijkstra.cpp -o dijkstra.exe<br>
+    .\dijkstra.exe
+  </div>
+  <p><strong>Sample Input (5 vertices, matrix, source 0):</strong></p>
+  <pre>5
+0 4 1 0 0
+4 0 2 1 7
+1 2 0 5 0
+0 1 5 0 3
+0 7 0 3 0
+0</pre>
+  <p><strong>Sample Output:</strong></p>
+  <pre>Shortest distances:
+Vertex 0 : 0
+Vertex 1 : 3
+Vertex 2 : 1
+Vertex 3 : 4
+Vertex 4 : 7</pre>
+
+  <hr>
+
+  <!-- PRACTICAL 4(B) -->
+  <h2>Practical 4(B): Distance Vector Routing Algorithm</h2>
+  <p><strong>Aim:</strong> Implement Distance Vector Routing in C++ to compute shortest path cost and next hops across routers via Bellman-Ford updates.</p>
+
+  <h3>Code (distance_vector.cpp)</h3>
+<pre><code>#include &lt;iostream&gt;
+
+using namespace std;
+
+const int N = 4, INF = 999;
+int cost[N][N] = {
+    {0, 2, 7, INF},
+    {2, 0, 3, 8},
+    {7, 3, 0, 1},
+    {INF, 8, 1, 0}
+};
+
+int main() {
+    int d[N][N], hop[N][N];
+
+    for (int i = 0; i &lt; N; i++) {
+        for (int j = 0; j &lt; N; j++) {
+            d[i][j] = cost[i][j];
+            if (i != j &amp;&amp; cost[i][j] &lt; INF) hop[i][j] = j;
+            else hop[i][j] = -1;
+        }
+    }
+
+    bool changed;
+    do {
+        changed = false;
+        for (int i = 0; i &lt; N; i++) {
+            for (int k = 0; k &lt; N; k++) {
+                if (i != k &amp;&amp; cost[i][k] &lt; INF) {
+                    for (int j = 0; j &lt; N; j++) {
+                        if (d[k][j] &lt; INF &amp;&amp; cost[i][k] + d[k][j] &lt; d[i][j]) {
+                            d[i][j] = cost[i][k] + d[k][j];
+                            hop[i][j] = k;
+                            changed = true;
+                        }
+                    }
+                }
+            }
+        }
+    } while (changed);
+
+    cout &lt;&lt; "Distance table:\n";
+    for (int i = 0; i &lt; N; i++) {
+        cout &lt;&lt; "R" &lt;&lt; i &lt;&lt; ": ";
+        for (int j = 0; j &lt; N; j++) cout &lt;&lt; d[i][j] &lt;&lt; " ";
+        cout &lt;&lt; endl;
+    }
+
+    cout &lt;&lt; "\nNext-hop table:\n";
+    for (int i = 0; i &lt; N; i++) {
+        cout &lt;&lt; "R" &lt;&lt; i &lt;&lt; ": ";
+        for (int j = 0; j &lt; N; j++) {
+            if (hop[i][j] == -1) cout &lt;&lt; "- ";
+            else cout &lt;&lt; "R" &lt;&lt; hop[i][j] &lt;&lt; " ";
+        }
+        cout &lt;&lt; endl;
+    }
+
+    return 0;
+}</code></pre>
+
+  <p><strong>Compilation & Execution:</strong></p>
+  <div class="cmd">
+    g++ distance_vector.cpp -o distance_vector.exe<br>
+    .\distance_vector.exe
+  </div>
+  <p><strong>Sample Output:</strong></p>
+  <pre>Distance table:
+R0: 0 2 5 6 
+R1: 2 0 3 4 
+R2: 5 3 0 1 
+R3: 6 4 1 0 
+
+Next-hop table:
+R0: - R1 R1 R1 
+R1: R0 - R2 R2 
+R2: R1 R1 - R3 
+R3: R2 R2 R2 - </pre>
+</div>
+
+</body>
+</html>
